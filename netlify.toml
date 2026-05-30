@@ -1,0 +1,19 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
+  PRISMA_CLI_BINARY_TARGETS = "rhel-openssl-3.0.x"
+
+# Include the seeded SQLite DB in the serverless function bundle.
+# Prisma client + engine binaries are handled by next.config.ts via
+# `serverExternalPackages`, so we don't list them here (would conflict
+# with @netlify/plugin-nextjs internal bundling).
+[functions]
+  included_files = ["prisma/dev.db"]
+
+# Netlify Next.js plugin handles SSR, server actions and API routes.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

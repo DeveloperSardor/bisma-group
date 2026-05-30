@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.next-admin/
 /out/
 
 # production
@@ -39,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local Netlify folder
+.netlify
+
+# Large/private artifacts (don't push to git)
+bisma-site*.zip
+out.zip
+out/
+prisma/dev.db
+prisma/dev.db-journal

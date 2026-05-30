@@ -1,0 +1,161 @@
+// Bisma Group Admin Backend — Prisma Schema
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model PortfolioProject {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  name              String
+  tagline           String
+  shortDesc         String
+  address           String
+  landmark          String
+  image             String
+  // Specs
+  renovationType    String   // Kosmetik, Kapital, Dizaynerlik, Maxsus
+  duration          String   // "90 kun"
+  area              String   // "102 m²"
+  pricePerSqm       String   // "$135 / m²"
+  rooms             String   // "3 xonali"
+  tech              String   // "Toza topshiruv"
+  docs              String
+  price             String
+  // JSON-stored lists
+  apartments        String   // JSON: [{rooms, size, plan}]
+  amenities         String   // JSON: [{icon, label}]
+  safety            String   // JSON: [{icon, label}]
+  matrix            String   // JSON: [{icon, type, solution}]
+  advantages        String   // JSON: string[]
+  paymentOptions    String   // JSON: string[]
+  badge             String?  // "YANGI", "KOTLOVAN" etc
+  isCommercial      Boolean  @default(false)
+  // Commercial-specific
+  commBlocks        String?
+  commUnits         String?
+  commStatus        String?
+  commSize          String?
+  commBenefits      String?
+  order             Int      @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Service {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  label        String   // Header label
+  shortDesc    String
+  icon         String   // lucide icon name
+  // Big stats — JSON: [{value, label}]
+  bigStats     String
+  // Features — JSON: [{icon, label}]
+  iconFeatures String
+  iconSpecs    String?  // JSON
+  variants     String?  // JSON
+  fractions    String?  // JSON
+  contactInfo  String
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  category  String
+  author    String
+  age       String   // "Kosmetik · 58 m²" or similar
+  quote     String
+  result    String
+  avatar    String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MaterialBrand {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   // "Shpaklyovka · gips"
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Equipment {
+  id        String   @id @default(cuid())
+  name      String
+  desc      String
+  icon      String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSettings {
+  id              String  @id @default("singleton")
+  // Hero
+  heroTitle       String  @default("Kvartira remontini")
+  heroTitleAccent String  @default("g'oyadan topshirishgacha")
+  heroDesc        String  @default("Bisma Group — Toshkentda yevro-remont xizmatlari. Loyiha, materiallar, ish — barchasi bir qo'lda. 2 yil kafolat, aniq smeta, belgilangan muddat.")
+  // Contact
+  phone           String  @default("+998 78 122 75 75")
+  phoneRaw        String  @default("+998781227575")
+  email           String  @default("info@bismagroup.uz")
+  // Offices — JSON: [{name, address, landmark, mapsQuery}]
+  offices         String  @default("[]")
+  // About
+  aboutFoundedYear String @default("2014")
+  aboutExperienceYears String @default("11")
+  aboutProjectsCount String @default("500+")
+  aboutWarranty   String  @default("2 yil")
+  // Social
+  telegramUrl     String  @default("https://t.me/")
+  whatsappUrl     String  @default("https://wa.me/998781227575")
+  instagramUrl    String  @default("https://instagram.com/")
+  updatedAt       DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  project   String?  // Selected renovation type
+  type      String?  // Object type (kvartira, ofis...)
+  message   String?
+  status    String   @default("new") // new, contacted, archived
+  notes     String?  // Internal admin notes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

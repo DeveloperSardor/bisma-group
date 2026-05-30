@@ -1,34 +1,29 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Minimal premium palette */
+  --bg: #ffffff;
+  --bg-soft: #f5f5f7;
+  --text: #1d1d1f;
+  --text-soft: #86868b;
+  --text-faint: #a1a1a6;
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.16);
+  --accent: #2997ff;
+  --accent-dark: #0066cc;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  /* Aliases for legacy refs */
+  --brand-cyan: #2997ff;
+  --brand-navy: #1d1d1f;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f7;
+  --text-main: #1d1d1f;
+  --text-muted: #86868b;
+  --border-light: rgba(0, 0, 0, 0.08);
 
-html {
-  height: 100%;
-}
+  --container: 1280px;
+  --section-y: 140px;
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition: all 0.5s var(--ease);
 }
 
 * {
@@ -37,13 +32,271 @@ body {
   margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+html,
+body {
+  background: var(--bg);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+body {
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  line-height: 1.55;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv01", "cv02";
+}
+
+main {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.25s var(--ease);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
   }
+}
+
+@media (max-width: 380px) {
+  .container {
+    padding: 0 14px;
+  }
+}
+
+/* Responsive safety nets */
+html { -webkit-text-size-adjust: 100%; }
+
+input,
+textarea,
+select,
+button {
+  max-width: 100%;
+  font-family: inherit;
+}
+
+/* Prevent long unbreakable strings from blowing the layout */
+p, h1, h2, h3, h4, h5, h6, span, a, li, dt, dd, label {
+  overflow-wrap: anywhere;
+}
+
+section {
+  background: var(--bg);
+}
+
+section:not(.hero-section) {
+  padding: var(--section-y) 0;
+}
+
+@media (max-width: 768px) {
+  section:not(.hero-section) {
+    padding: 88px 0;
+  }
+}
+
+::selection {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Utility: section eyebrow label */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--text-faint);
+}
+
+/* Section heading */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 72px;
+  max-width: 760px;
+}
+
+.section-title {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+.section-lead {
+  font-size: clamp(15px, 1.25vw, 17px);
+  line-height: 1.55;
+  color: var(--text-soft);
+  max-width: 560px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 100px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: inherit;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease),
+    border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.btn-primary:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.btn-secondary:hover {
+  border-color: var(--text);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  padding: 12px 0;
+}
+
+.btn-ghost:hover {
+  color: var(--accent-dark);
+}
+
+/* Reveal animation hook */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Mobile nav (kept from prior) ===== */
+.mobile-nav {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease),
+    visibility 0s linear 0.4s;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  color: var(--text);
+}
+
+.mobile-nav.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease),
+    visibility 0s linear 0s;
+}
+
+.mobile-nav-inner {
+  min-height: 100%;
+  padding: 110px 28px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-nav .mobile-link {
+  display: block;
+  width: 100%;
+  padding: 22px 4px;
+  font-family: var(--font-serif), serif;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  font-weight: 400;
+  border-bottom: 1px solid var(--line);
+  transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+.mobile-nav .mobile-link:active {
+  color: var(--accent);
+  padding-left: 12px;
+}
+
+.mobile-nav .mobile-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  padding: 18px 28px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  transition: transform 0.3s ease;
+}
+
+.mobile-nav .mobile-cta:active {
+  transform: scale(0.98);
 }
