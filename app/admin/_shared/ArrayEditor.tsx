@@ -48,26 +48,54 @@ export default function ArrayEditor({
     if (!initialJson) return [];
     try {
       const arr = JSON.parse(initialJson);
-      if (Array.isArray(arr)) return arr.map((item) => {
+      if (!Array.isArray(arr)) return [];
+      return arr.map((item) => {
         const obj: Record<string, string> = {};
         for (const f of fields) {
           const v = item?.[f.name];
           if (v == null) {
-            obj[f.name] = "";
+            obj[f.name] = f.localized ? JSON.stringify({ uz: "", ru: "", en: "" }) : "";
           } else if (f.localized) {
-            // Normalize to JSON string of {uz,ru,en}
-            if (typeof v === "object") {
-              obj[f.name] = JSON.stringify({ uz: v.uz || "", ru: v.ru || "", en: v.en || "" });
+            // Normalize to canonical {uz,ru,en} JSON string. Handle three cases:
+            //   1) v is already an object → take uz/ru/en
+            //   2) v is a string that parses to a localized JSON → take uz/ru/en
+            //   3) v is a plain string → treat as UZ, leave RU/EN empty
+            let uz = "", ru = "", en = "";
+            if (typeof v === "object" && v !== null) {
+              uz = String((v as Record<string, unknown>).uz ?? "");
+              ru = String((v as Record<string, unknown>).ru ?? "");
+              en = String((v as Record<string, unknown>).en ?? "");
+            } else if (typeof v === "string") {
+              let used = false;
+              if (v.startsWith("{") && v.endsWith("}")) {
+                try {
+                  const inner = JSON.parse(v);
+                  if (
+                    inner && typeof inner === "object" &&
+                    ("uz" in inner || "ru" in inner || "en" in inner)
+                  ) {
+                    uz = String(inner.uz ?? "");
+                    ru = String(inner.ru ?? "");
+                    en = String(inner.en ?? "");
+                    used = true;
+                  }
+                } catch {
+                  // not JSON — fall through to plain
+                }
+              }
+              if (!used) {
+                uz = v;
+              }
             } else {
-              obj[f.name] = JSON.stringify({ uz: String(v), ru: "", en: "" });
+              uz = String(v);
             }
+            obj[f.name] = JSON.stringify({ uz, ru, en });
           } else {
             obj[f.name] = String(v);
           }
         }
         return obj;
       });
-      return [];
     } catch {
       return [];
     }
