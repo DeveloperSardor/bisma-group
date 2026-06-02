@@ -65,9 +65,6 @@ export default function LoginPage() {
             <LogIn size={15} />
             {pending ? "Kirilmoqda..." : "KIRISH"}
           </button>
-          <p className="admin-helper-text" style={{ textAlign: "center", marginTop: 4 }}>
-            Demo: <code className="admin-mono">admin / bisma2026</code>
-          </p>
         </div>
       </form>
     </div>
