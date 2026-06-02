@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { Plus, X } from "lucide-react";
+import { useFormLang } from "./FormLangContext";
 
 type FieldDef = {
   name: string;
@@ -101,7 +102,12 @@ export default function ArrayEditor({
     }
   })();
   const [rows, setRows] = useState<Record<string, string>[]>(parsed);
-  const [activeLang, setActiveLang] = useState<Lang>("uz");
+  const formLang = useFormLang();
+  const [localLang, setLocalLang] = useState<Lang>("uz");
+  const activeLang: Lang = formLang ? formLang.lang : localLang;
+  const setActiveLang = formLang ? formLang.setLang : setLocalLang;
+  // Hide the local lang bar when a form-level FormLangProvider exists.
+  const showLocalBar = hasLocalized && !formLang;
 
   const updateRow = (i: number, field: string, value: string) => {
     setRows((prev) => prev.map((r, idx) => (idx === i ? { ...r, [field]: value } : r)));
@@ -141,7 +147,7 @@ export default function ArrayEditor({
     <div className="ae-wrap">
       <input type="hidden" name={name} value={JSON.stringify(rows)} />
 
-      {hasLocalized && (
+      {showLocalBar && (
         <div className="ae-lang-bar">
           <span className="ae-lang-bar-label">Til:</span>
           <div className="ae-lang-tabs">

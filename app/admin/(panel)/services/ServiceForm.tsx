@@ -5,6 +5,7 @@ import { FormShell, SubmitButton } from "../../_shared/FormShell";
 import DeleteButton from "../../_shared/DeleteButton";
 import ArrayEditor from "../../_shared/ArrayEditor";
 import { LocalizedInput } from "../../_shared/LocalizedInput";
+import { FormLangProvider } from "../../_shared/FormLangContext";
 import { ICON_OPTIONS } from "../../_shared/iconOptions";
 import {
   createServiceAction,
@@ -43,6 +44,7 @@ export default function ServiceForm({ item }: { item?: Service }) {
       backHref="/admin/services"
       alert={state.error ? { type: "error", message: state.error } : null}
     >
+      <FormLangProvider>
       <form action={formAction} className="admin-form">
         <div className="admin-form-row">
           <div className="admin-field">
@@ -141,6 +143,7 @@ export default function ServiceForm({ item }: { item?: Service }) {
           <SubmitButton />
         </div>
       </form>
+      </FormLangProvider>
     </FormShell>
   );
 }

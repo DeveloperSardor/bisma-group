@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Save } from "lucide-react";
 import ArrayEditor from "../../_shared/ArrayEditor";
 import { LocalizedInput } from "../../_shared/LocalizedInput";
+import { FormLangProvider } from "../../_shared/FormLangContext";
 import { updateSettingsAction, type SettingsFormState } from "./actions";
 import { useTranslation } from "../../../i18n/LangContext";
 
@@ -83,6 +84,7 @@ export default function SettingsForm({ settings }: { settings: Settings }) {
         </div>
       )}
 
+      <FormLangProvider>
       <form action={formAction} className="admin-form">
         <div className="admin-card">
           <div className="admin-card-header">
@@ -195,6 +197,7 @@ export default function SettingsForm({ settings }: { settings: Settings }) {
           </button>
         </div>
       </form>
+      </FormLangProvider>
     </>
   );
 }

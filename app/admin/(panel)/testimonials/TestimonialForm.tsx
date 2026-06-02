@@ -5,6 +5,7 @@ import { FormShell, SubmitButton } from "../../_shared/FormShell";
 import DeleteButton from "../../_shared/DeleteButton";
 import { LocalizedInput } from "../../_shared/LocalizedInput";
 import ImageUpload from "../../_shared/ImageUpload";
+import { FormLangProvider } from "../../_shared/FormLangContext";
 import {
   createTestimonialAction,
   updateTestimonialAction,
@@ -38,6 +39,7 @@ export default function TestimonialForm({ item }: { item?: Testimonial }) {
       backHref="/admin/testimonials"
       alert={state.error ? { type: "error", message: state.error } : null}
     >
+      <FormLangProvider>
       <form action={formAction} className="admin-form">
         <div className="admin-form-row">
           <div className="admin-field">
@@ -82,6 +84,7 @@ export default function TestimonialForm({ item }: { item?: Testimonial }) {
           <SubmitButton />
         </div>
       </form>
+      </FormLangProvider>
     </FormShell>
   );
 }
