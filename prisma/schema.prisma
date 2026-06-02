@@ -129,6 +129,7 @@ model SiteSettings {
   heroTitle       String  @default("Kvartira remontini")
   heroTitleAccent String  @default("g'oyadan topshirishgacha")
   heroDesc        String  @default("Bisma Group — Toshkentda yevro-remont xizmatlari. Loyiha, materiallar, ish — barchasi bir qo'lda. 2 yil kafolat, aniq smeta, belgilangan muddat.")
+  heroImage       String  @default("/hero-bg-interior.png")
   // Contact
   phone           String  @default("+998 78 122 75 75")
   phoneRaw        String  @default("+998781227575")

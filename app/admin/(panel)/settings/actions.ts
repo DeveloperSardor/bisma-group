@@ -38,6 +38,7 @@ export async function updateSettingsAction(
       heroTitle: String(formData.get("heroTitle") || "").trim(),
       heroTitleAccent: String(formData.get("heroTitleAccent") || "").trim(),
       heroDesc: String(formData.get("heroDesc") || "").trim(),
+      heroImage: String(formData.get("heroImage") || "/hero-bg-interior.png").trim() || "/hero-bg-interior.png",
       phone: String(formData.get("phone") || "").trim(),
       phoneRaw: String(formData.get("phoneRaw") || "").trim(),
       email: String(formData.get("email") || "").trim(),

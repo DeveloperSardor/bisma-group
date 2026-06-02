@@ -5,6 +5,7 @@ import { Save } from "lucide-react";
 import ArrayEditor from "../../_shared/ArrayEditor";
 import { LocalizedInput } from "../../_shared/LocalizedInput";
 import { FormLangProvider } from "../../_shared/FormLangContext";
+import ImageUpload from "../../_shared/ImageUpload";
 import { updateSettingsAction, type SettingsFormState } from "./actions";
 import { useTranslation } from "../../../i18n/LangContext";
 
@@ -45,6 +46,7 @@ type Settings = {
   heroTitle: string;
   heroTitleAccent: string;
   heroDesc: string;
+  heroImage: string;
   phone: string;
   phoneRaw: string;
   email: string;
@@ -103,6 +105,15 @@ export default function SettingsForm({ settings }: { settings: Settings }) {
 
           <div className="admin-field">
             <LocalizedInput name="heroDesc" defaultValue={settings.heroDesc} label={t.heroDesc} isTextarea />
+          </div>
+
+          <div className="admin-field">
+            <ImageUpload
+              name="heroImage"
+              defaultValue={settings.heroImage}
+              label="Hero orqa fon rasm"
+              hint="Bosh sahifa katta tepa fon rasmi (yuqori sifatda, kengligi 1920px+)"
+            />
           </div>
         </div>
 

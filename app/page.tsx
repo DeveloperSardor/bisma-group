@@ -32,6 +32,7 @@ export default async function Home() {
       <Hero
         title={settings.heroTitle}
         accent={settings.heroTitleAccent}
+        image={settings.heroImage}
         desc={settings.heroDesc}
         phone={settings.phone}
         projectsCount={settings.aboutProjectsCount}

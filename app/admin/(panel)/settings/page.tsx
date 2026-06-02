@@ -14,6 +14,7 @@ export default async function SettingsPage() {
         heroTitle: settings.heroTitle,
         heroTitleAccent: settings.heroTitleAccent,
         heroDesc: settings.heroDesc,
+        heroImage: settings.heroImage,
         phone: settings.phone,
         phoneRaw: settings.phoneRaw,
         email: settings.email,

@@ -9,10 +9,12 @@ export default function Hero({
   title,
   accent,
   desc,
+  image,
 }: {
   title?: string;
   accent?: string;
   desc?: string;
+  image?: string;
   phone?: string;
   projectsCount?: string;
   experience?: string;
@@ -22,20 +24,35 @@ export default function Hero({
   const titleL = getLocalized(title, lang) || t("hero.title");
   const accentL = getLocalized(accent, lang) || t("hero.titleAccent");
   const descL = getLocalized(desc, lang) || t("hero.desc");
+  const heroImg = image && image.trim() ? image : "/hero-bg-interior.png";
+  // next/image with `fill` requires an absolute/known dimension. For uploaded
+  // images served from /uploads, next/image works fine. For external URLs,
+  // they'd need remotePatterns; for safety fall back to a plain <img>.
+  const isLocalPath = heroImg.startsWith("/");
 
   return (
     <section className="hero-section">
       <div className="hero-bg-layer">
-        <Image
-          src="/hero-bg-interior.png"
-          alt="Bisma Group interior"
-          fill
-          priority
-          fetchPriority="high"
-          sizes="100vw"
-          quality={92}
-          className="hero-image-main"
-        />
+        {isLocalPath ? (
+          <Image
+            src={heroImg}
+            alt="Bisma Group interior"
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            quality={92}
+            className="hero-image-main"
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={heroImg}
+            alt="Bisma Group interior"
+            className="hero-image-main"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        )}
         <div className="hero-overlay" />
       </div>
 
