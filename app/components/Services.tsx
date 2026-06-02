@@ -13,10 +13,10 @@ type Service = {
 };
 
 const SERVICE_IMAGES: Record<string, string> = {
-  kosmetik: "/interior-1.png",
-  kapital: "/interior-2.png",
-  dizayn: "/interior.png",
-  sanuzel: "/hero-bg-premium.png",
+  kosmetik: "/service-kosmetik.webp",
+  kapital: "/service-kapital.webp",
+  dizayn: "/service-dizayn.webp",
+  sanuzel: "/service-sanuzel.webp",
 };
 
 export default function Services({ items }: { items: Service[] }) {
@@ -32,7 +32,7 @@ export default function Services({ items }: { items: Service[] }) {
           {items.map((s) => {
             const title = getLocalized(s.title, lang) || s.title;
             const desc = getLocalized(s.shortDesc, lang) || s.shortDesc;
-            const img = SERVICE_IMAGES[s.slug] || "/interior-1.png";
+            const img = SERVICE_IMAGES[s.slug] || "/service-kosmetik.webp";
             return (
               <article key={s.id} className="card">
                 <div className="card-image-wrap">
