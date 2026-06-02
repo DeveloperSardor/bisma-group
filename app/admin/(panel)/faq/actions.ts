@@ -50,3 +50,12 @@ export async function deleteFaqAction(id: string) {
   revalidatePath("/admin/faq");
   revalidatePath("/");
 }
+
+export async function reorderFaqsAction(ids: string[]) {
+  await requireAuth();
+  await prisma.$transaction(
+    ids.map((id, order) => prisma.faq.update({ where: { id }, data: { order } })),
+  );
+  revalidatePath("/admin/faq");
+  revalidatePath("/");
+}

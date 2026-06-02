@@ -68,3 +68,12 @@ export async function deleteTestimonialAction(id: string) {
   revalidatePath("/admin/testimonials");
   revalidatePath("/");
 }
+
+export async function reorderTestimonialsAction(ids: string[]) {
+  await requireAuth();
+  await prisma.$transaction(
+    ids.map((id, order) => prisma.testimonial.update({ where: { id }, data: { order } })),
+  );
+  revalidatePath("/admin/testimonials");
+  revalidatePath("/");
+}

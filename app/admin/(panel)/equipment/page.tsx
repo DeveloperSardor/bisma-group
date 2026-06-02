@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { Plus, Edit, Wrench } from "lucide-react";
+import { Plus, Wrench } from "lucide-react";
 import { prisma } from "../../../../lib/prisma";
-import DeleteButton from "../../_shared/DeleteButton";
-import { deleteEquipmentAction } from "./actions";
 import { cookies } from "next/headers";
 import type { Lang } from "../../../i18n/dictionaries";
 import { getLocalized } from "../../../i18n/utils";
+import EquipmentTable from "./EquipmentTable";
 
 const dict = {
   uz: {
@@ -57,44 +56,22 @@ export default async function EquipmentListPage() {
           </div>
         </div>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{ width: 60 }}>#</th>
-                <th>{t.thName}</th>
-                <th style={{ width: 120 }}>{t.thIcon}</th>
-                <th style={{ width: 120 }}>{t.thStatus}</th>
-                <th style={{ width: 140 }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((e) => (
-                <tr key={e.id}>
-                  <td className="admin-mono" style={{ color: "var(--muted)" }}>{e.order}</td>
-                  <td>
-                    <strong style={{ fontWeight: 600 }}>{getLocalized(e.name, lang)}</strong>
-                    <div style={{ color: "var(--muted)", fontSize: 12, marginTop: 4 }} className="admin-truncate">{getLocalized(e.desc, lang)}</div>
-                  </td>
-                  <td className="admin-mono" style={{ color: "var(--muted)" }}>{e.icon}</td>
-                  <td>
-                    <span className={`admin-badge ${e.isActive ? "admin-badge-active" : "admin-badge-inactive"}`}>
-                      {e.isActive ? t.statusActive : t.statusInactive}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="row-actions">
-                      <Link href={`/admin/equipment/${e.id}`} className="admin-btn admin-btn-secondary admin-btn-icon">
-                        <Edit size={14} />
-                      </Link>
-                      <DeleteButton action={deleteEquipmentAction.bind(null, e.id)} size="icon" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <EquipmentTable
+          items={items.map((e) => ({
+            id: e.id,
+            name: getLocalized(e.name, lang),
+            desc: getLocalized(e.desc, lang),
+            icon: e.icon,
+            isActive: e.isActive,
+          }))}
+          labels={{
+            thName: t.thName,
+            thIcon: t.thIcon,
+            thStatus: t.thStatus,
+            statusActive: t.statusActive,
+            statusInactive: t.statusInactive,
+          }}
+        />
       )}
     </>
   );

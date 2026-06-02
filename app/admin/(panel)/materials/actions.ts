@@ -48,3 +48,14 @@ export async function deleteMaterialAction(id: string) {
   revalidatePath("/admin/materials");
   revalidatePath("/");
 }
+
+export async function reorderMaterialsAction(ids: string[]) {
+  await requireAuth();
+  await prisma.$transaction(
+    ids.map((id, order) =>
+      prisma.materialBrand.update({ where: { id }, data: { order } }),
+    ),
+  );
+  revalidatePath("/admin/materials");
+  revalidatePath("/");
+}

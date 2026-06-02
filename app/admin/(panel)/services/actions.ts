@@ -78,3 +78,12 @@ export async function deleteServiceAction(id: string) {
   revalidatePath("/admin/services");
   revalidatePath("/");
 }
+
+export async function reorderServicesAction(ids: string[]) {
+  await requireAuth();
+  await prisma.$transaction(
+    ids.map((id, order) => prisma.service.update({ where: { id }, data: { order } })),
+  );
+  revalidatePath("/admin/services");
+  revalidatePath("/");
+}

@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { Plus, Edit, Quote } from "lucide-react";
+import { Plus, Quote } from "lucide-react";
 import { prisma } from "../../../../lib/prisma";
-import DeleteButton from "../../_shared/DeleteButton";
-import { deleteTestimonialAction } from "./actions";
 import { cookies } from "next/headers";
 import type { Lang } from "../../../i18n/dictionaries";
 import { getLocalized } from "../../../i18n/utils";
+import TestimonialsTable from "./TestimonialsTable";
 
 const dict = {
   uz: {
@@ -57,51 +56,25 @@ export default async function TestimonialsListPage() {
           </div>
         </div>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{ width: 70 }}></th>
-                <th>{t.thAuthor}</th>
-                <th>{t.thQuote}</th>
-                <th style={{ width: 130 }}>{t.thCategory}</th>
-                <th style={{ width: 100 }}>{t.thStatus}</th>
-                <th style={{ width: 140 }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.avatar} alt={getLocalized(item.author, lang)} className="admin-row-image" style={{ width: 38, height: 38, borderRadius: "50%" }} />
-                  </td>
-                  <td>
-                    <strong style={{ fontWeight: 600 }}>{getLocalized(item.author, lang)}</strong>
-                    <div style={{ color: "var(--muted)", fontSize: 11.5, marginTop: 2 }}>{getLocalized(item.age, lang)}</div>
-                  </td>
-                  <td>
-                    <span className="admin-truncate">{getLocalized(item.quote, lang)}</span>
-                  </td>
-                  <td>
-                    <span className="admin-badge admin-badge-new">{getLocalized(item.category, lang)}</span>
-                  </td>
-                  <td>
-                    <span className={`admin-badge ${item.isActive ? "admin-badge-active" : "admin-badge-inactive"}`}>
-                      {item.isActive ? t.statusActive : t.statusInactive}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="row-actions">
-                      <Link href={`/admin/testimonials/${item.id}`} className="admin-btn admin-btn-secondary admin-btn-icon"><Edit size={14} /></Link>
-                      <DeleteButton action={deleteTestimonialAction.bind(null, item.id)} size="icon" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <TestimonialsTable
+          items={items.map((item) => ({
+            id: item.id,
+            author: getLocalized(item.author, lang),
+            age: getLocalized(item.age, lang),
+            quote: getLocalized(item.quote, lang),
+            category: getLocalized(item.category, lang),
+            avatar: item.avatar,
+            isActive: item.isActive,
+          }))}
+          labels={{
+            thAuthor: t.thAuthor,
+            thQuote: t.thQuote,
+            thCategory: t.thCategory,
+            thStatus: t.thStatus,
+            statusActive: t.statusActive,
+            statusInactive: t.statusInactive,
+          }}
+        />
       )}
     </>
   );

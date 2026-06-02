@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { Plus, Edit, HelpCircle } from "lucide-react";
+import { Plus, HelpCircle } from "lucide-react";
 import { prisma } from "../../../../lib/prisma";
-import DeleteButton from "../../_shared/DeleteButton";
-import { deleteFaqAction } from "./actions";
 import { cookies } from "next/headers";
 import type { Lang } from "../../../i18n/dictionaries";
 import { getLocalized } from "../../../i18n/utils";
+import FaqTable from "./FaqTable";
 
 const dict = {
   uz: {
@@ -63,44 +62,20 @@ export default async function FaqListPage() {
           </div>
         </div>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{ width: 60 }}>#</th>
-                <th>{t.thQuestion}</th>
-                <th style={{ width: 130 }}>{t.thStatus}</th>
-                <th style={{ width: 140 }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {faqs.map((f) => (
-                <tr key={f.id}>
-                  <td className="admin-mono" style={{ color: "var(--muted)" }}>{f.order}</td>
-                  <td>
-                    <strong style={{ fontWeight: 600 }}>{getLocalized(f.question, lang)}</strong>
-                    <div style={{ color: "var(--muted)", fontSize: 12, marginTop: 4 }} className="admin-truncate">
-                      {getLocalized(f.answer, lang)}
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`admin-badge ${f.isActive ? "admin-badge-active" : "admin-badge-inactive"}`}>
-                      {f.isActive ? t.statusActive : t.statusInactive}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="row-actions">
-                      <Link href={`/admin/faq/${f.id}`} className="admin-btn admin-btn-secondary admin-btn-icon" aria-label="Tahrirlash">
-                        <Edit size={14} />
-                      </Link>
-                      <DeleteButton action={deleteFaqAction.bind(null, f.id)} size="icon" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <FaqTable
+          items={faqs.map((f) => ({
+            id: f.id,
+            question: getLocalized(f.question, lang),
+            answer: getLocalized(f.answer, lang),
+            isActive: f.isActive,
+          }))}
+          labels={{
+            thQuestion: t.thQuestion,
+            thStatus: t.thStatus,
+            statusActive: t.statusActive,
+            statusInactive: t.statusInactive,
+          }}
+        />
       )}
     </>
   );

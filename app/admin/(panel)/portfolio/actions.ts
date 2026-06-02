@@ -167,3 +167,12 @@ export async function deletePortfolioAction(id: string) {
   revalidatePath("/admin/portfolio");
   revalidatePath("/");
 }
+
+export async function reorderPortfolioAction(ids: string[]) {
+  await requireAuth();
+  await prisma.$transaction(
+    ids.map((id, order) => prisma.portfolioProject.update({ where: { id }, data: { order } })),
+  );
+  revalidatePath("/admin/portfolio");
+  revalidatePath("/");
+}

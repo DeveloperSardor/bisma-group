@@ -49,3 +49,12 @@ export async function deleteEquipmentAction(id: string) {
   revalidatePath("/admin/equipment");
   revalidatePath("/");
 }
+
+export async function reorderEquipmentAction(ids: string[]) {
+  await requireAuth();
+  await prisma.$transaction(
+    ids.map((id, order) => prisma.equipment.update({ where: { id }, data: { order } })),
+  );
+  revalidatePath("/admin/equipment");
+  revalidatePath("/");
+}

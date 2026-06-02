@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { Plus, Edit, Briefcase } from "lucide-react";
+import { Plus, Briefcase } from "lucide-react";
 import { prisma } from "../../../../lib/prisma";
-import DeleteButton from "../../_shared/DeleteButton";
-import { deletePortfolioAction } from "./actions";
 import { getLocalized } from "../../../i18n/utils";
 import { cookies } from "next/headers";
 import type { Lang } from "../../../i18n/dictionaries";
+import PortfolioTable from "./PortfolioTable";
 
 const dict = {
   uz: {
@@ -65,64 +64,27 @@ export default async function PortfolioListPage() {
           </div>
         </div>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{ width: 70 }}></th>
-                <th>{t.thName}</th>
-                <th style={{ width: 130 }}>{t.thType}</th>
-                <th style={{ width: 110 }}>{t.thArea}</th>
-                <th style={{ width: 100 }}>{t.thStatus}</th>
-                <th style={{ width: 140 }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((p) => (
-                <tr key={p.id}>
-                  <td>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.image}
-                      alt={getLocalized(p.name, lang)}
-                      className="admin-row-image"
-                      style={{ width: 50, height: 50, borderRadius: 8, objectFit: "cover" }}
-                    />
-                  </td>
-                  <td>
-                    <strong style={{ fontWeight: 600 }}>{getLocalized(p.name, lang)}</strong>
-                    <div style={{ color: "var(--muted)", fontSize: 12, marginTop: 4 }} className="admin-truncate">
-                      {getLocalized(p.tagline, lang)}
-                    </div>
-                  </td>
-                  <td>
-                    <span className="admin-badge admin-badge-new">
-                      {p.isCommercial ? t.commercial : (getLocalized(p.renovationType, lang) || p.renovationType)}
-                    </span>
-                  </td>
-                  <td style={{ color: "var(--muted)" }}>{getLocalized(p.area, lang)}</td>
-                  <td>
-                    <span className={`admin-badge ${p.isActive ? "admin-badge-active" : "admin-badge-inactive"}`}>
-                      {p.isActive ? t.statusActive : t.statusInactive}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="row-actions">
-                      <Link
-                        href={`/admin/portfolio/${p.id}`}
-                        className="admin-btn admin-btn-secondary admin-btn-icon"
-                        aria-label="Tahrirlash"
-                      >
-                        <Edit size={14} />
-                      </Link>
-                      <DeleteButton action={deletePortfolioAction.bind(null, p.id)} size="icon" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <PortfolioTable
+          items={items.map((p) => ({
+            id: p.id,
+            name: getLocalized(p.name, lang),
+            tagline: getLocalized(p.tagline, lang),
+            image: p.image,
+            area: getLocalized(p.area, lang),
+            renovationType: getLocalized(p.renovationType, lang) || p.renovationType,
+            isCommercial: p.isCommercial,
+            isActive: p.isActive,
+          }))}
+          labels={{
+            thName: t.thName,
+            thType: t.thType,
+            thArea: t.thArea,
+            thStatus: t.thStatus,
+            statusActive: t.statusActive,
+            statusInactive: t.statusInactive,
+            commercial: t.commercial,
+          }}
+        />
       )}
     </>
   );

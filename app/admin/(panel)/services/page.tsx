@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { Plus, Edit, Sparkles } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
 import { prisma } from "../../../../lib/prisma";
-import DeleteButton from "../../_shared/DeleteButton";
-import { deleteServiceAction } from "./actions";
 import { cookies } from "next/headers";
 import type { Lang } from "../../../i18n/dictionaries";
 import { getLocalized } from "../../../i18n/utils";
+import ServicesTable from "./ServicesTable";
 
 const dict = {
   uz: {
@@ -61,46 +60,23 @@ export default async function ServicesListPage() {
           </div>
         </div>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{ width: 60 }}>#</th>
-                <th>{t.thName}</th>
-                <th>Slug</th>
-                <th style={{ width: 130 }}>{t.thIcon}</th>
-                <th style={{ width: 120 }}>{t.thStatus}</th>
-                <th style={{ width: 140 }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((s) => (
-                <tr key={s.id}>
-                  <td className="admin-mono" style={{ color: "var(--muted)" }}>{s.order}</td>
-                  <td>
-                    <strong style={{ fontWeight: 600 }}>{getLocalized(s.title, lang)}</strong>
-                    <div style={{ color: "var(--muted)", fontSize: 12, marginTop: 4 }} className="admin-truncate">{getLocalized(s.shortDesc, lang)}</div>
-                  </td>
-                  <td className="admin-mono" style={{ color: "var(--muted)" }}>{s.slug}</td>
-                  <td className="admin-mono" style={{ color: "var(--muted)" }}>{s.icon}</td>
-                  <td>
-                    <span className={`admin-badge ${s.isActive ? "admin-badge-active" : "admin-badge-inactive"}`}>
-                      {s.isActive ? t.statusActive : t.statusInactive}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="row-actions">
-                      <Link href={`/admin/services/${s.id}`} className="admin-btn admin-btn-secondary admin-btn-icon" aria-label="Tahrirlash">
-                        <Edit size={14} />
-                      </Link>
-                      <DeleteButton action={deleteServiceAction.bind(null, s.id)} size="icon" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ServicesTable
+          items={items.map((s) => ({
+            id: s.id,
+            title: getLocalized(s.title, lang),
+            shortDesc: getLocalized(s.shortDesc, lang),
+            slug: s.slug,
+            icon: s.icon,
+            isActive: s.isActive,
+          }))}
+          labels={{
+            thName: t.thName,
+            thIcon: t.thIcon,
+            thStatus: t.thStatus,
+            statusActive: t.statusActive,
+            statusInactive: t.statusInactive,
+          }}
+        />
       )}
     </>
   );

@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { Plus, Edit, Package } from "lucide-react";
+import { Plus, Package } from "lucide-react";
 import { prisma } from "../../../../lib/prisma";
-import DeleteButton from "../../_shared/DeleteButton";
-import { deleteMaterialAction } from "./actions";
 import { cookies } from "next/headers";
 import type { Lang } from "../../../i18n/dictionaries";
 import { getLocalized } from "../../../i18n/utils";
+import MaterialsTable from "./MaterialsTable";
 
 const dict = {
   uz: {
@@ -61,41 +60,21 @@ export default async function MaterialsListPage() {
           </div>
         </div>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{ width: 60 }}>#</th>
-                <th>{t.thBrand}</th>
-                <th>{t.thType}</th>
-                <th style={{ width: 130 }}>{t.thStatus}</th>
-                <th style={{ width: 140 }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((m) => (
-                <tr key={m.id}>
-                  <td className="admin-mono" style={{ color: "var(--muted)" }}>{m.order}</td>
-                  <td><strong style={{ fontWeight: 600 }}>{getLocalized(m.name, lang)}</strong></td>
-                  <td style={{ color: "var(--muted)" }}>{getLocalized(m.type, lang)}</td>
-                  <td>
-                    <span className={`admin-badge ${m.isActive ? "admin-badge-active" : "admin-badge-inactive"}`}>
-                      {m.isActive ? t.statusActive : t.statusInactive}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="row-actions">
-                      <Link href={`/admin/materials/${m.id}`} className="admin-btn admin-btn-secondary admin-btn-icon">
-                        <Edit size={14} />
-                      </Link>
-                      <DeleteButton action={deleteMaterialAction.bind(null, m.id)} size="icon" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <MaterialsTable
+          items={items.map((m) => ({
+            id: m.id,
+            name: getLocalized(m.name, lang),
+            type: getLocalized(m.type, lang),
+            isActive: m.isActive,
+          }))}
+          labels={{
+            thBrand: t.thBrand,
+            thType: t.thType,
+            thStatus: t.thStatus,
+            statusActive: t.statusActive,
+            statusInactive: t.statusInactive,
+          }}
+        />
       )}
     </>
   );
