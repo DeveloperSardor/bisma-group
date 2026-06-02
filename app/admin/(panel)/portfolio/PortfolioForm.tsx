@@ -5,6 +5,7 @@ import { FormShell, SubmitButton } from "../../_shared/FormShell";
 import DeleteButton from "../../_shared/DeleteButton";
 import ArrayEditor from "../../_shared/ArrayEditor";
 import { LocalizedInput } from "../../_shared/LocalizedInput";
+import ImageUpload from "../../_shared/ImageUpload";
 import { ICON_OPTIONS } from "../../_shared/iconOptions";
 import {
   createPortfolioAction,
@@ -105,8 +106,13 @@ export default function PortfolioForm({ item }: { item?: Portfolio }) {
         </div>
 
         <div className="admin-field">
-          <label className="admin-field-label">Rasm URL</label>
-          <input type="url" name="image" className="admin-input" required defaultValue={item?.image} placeholder="https://..." />
+          <ImageUpload
+            name="image"
+            defaultValue={item?.image}
+            label="Asosiy rasm"
+            required
+            hint="Loyihaning asosiy ko'rsatish rasmi (yuqori sifatda)"
+          />
           <span className="admin-field-hint">Asosiy ko'rsatish rasmi (yuqori sifatda)</span>
         </div>
 

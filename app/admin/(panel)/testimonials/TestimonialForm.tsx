@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { FormShell, SubmitButton } from "../../_shared/FormShell";
 import DeleteButton from "../../_shared/DeleteButton";
 import { LocalizedInput } from "../../_shared/LocalizedInput";
+import ImageUpload from "../../_shared/ImageUpload";
 import {
   createTestimonialAction,
   updateTestimonialAction,
@@ -56,9 +57,12 @@ export default function TestimonialForm({ item }: { item?: Testimonial }) {
           <LocalizedInput name="result" defaultValue={item?.result} label="Natija (pastdagi yashil banner)" placeholder="Masalan: 30 kunda topshirildi" />
         </div>
         <div className="admin-field">
-          <label className="admin-field-label">Avatar URL</label>
-          <input type="url" name="avatar" className="admin-input" defaultValue={item?.avatar} placeholder="https://..." />
-          <span className="admin-field-hint">To'g'ridan-to'g'ri rasm URL (Unsplash, CDN, va h.k.)</span>
+          <ImageUpload
+            name="avatar"
+            defaultValue={item?.avatar}
+            label="Avatar (mijoz rasmi)"
+            hint="Otzyv slayderida ko'rinadigan kichik avatar"
+          />
         </div>
         <div className="admin-form-row">
           <div className="admin-field">

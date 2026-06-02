@@ -50,3 +50,10 @@ out.zip
 out/
 prisma/dev.db
 prisma/dev.db-journal
+
+# Uploaded media — never in git, lives on server in /var/www/uploads
+/public/uploads/
+public/uploads/
+
+# Local-only deploy reference (contains secrets, never commit)
+for-deploy.txt
