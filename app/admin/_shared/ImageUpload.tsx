@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Upload, X, ImageIcon, Loader2 } from "lucide-react";
+import { useTranslation } from "../../i18n/LangContext";
 
 type Props = {
   name: string;
@@ -14,10 +15,11 @@ type Props = {
 export default function ImageUpload({
   name,
   defaultValue = "",
-  label = "Rasm",
+  label,
   required = false,
   hint,
 }: Props) {
+  const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
   const [url, setUrl] = useState<string>(defaultValue);
   const [uploading, setUploading] = useState(false);
@@ -56,7 +58,7 @@ export default function ImageUpload({
 
   return (
     <div className="img-up">
-      <label className="admin-field-label">{label}</label>
+      {label !== undefined && <label className="admin-field-label">{label}</label>}
 
       {/* Hidden input that actually gets submitted with the form */}
       <input type="hidden" name={name} value={url} required={required} />
@@ -76,11 +78,11 @@ export default function ImageUpload({
           <div className="img-up-actions">
             <button type="button" onClick={handlePick} className="img-up-btn" disabled={uploading}>
               {uploading ? <Loader2 size={13} className="spin" /> : <Upload size={13} />}
-              {uploading ? "Yuklanmoqda..." : "Almashtirish"}
+              {uploading ? t("admin.upload.uploading") : t("admin.upload.replace")}
             </button>
             <button type="button" onClick={handleRemove} className="img-up-btn danger">
               <X size={13} />
-              O&apos;chirish
+              {t("admin.upload.remove")}
             </button>
           </div>
           <code className="img-up-url">{url}</code>
@@ -95,13 +97,13 @@ export default function ImageUpload({
           {uploading ? (
             <>
               <Loader2 size={18} className="spin" />
-              <span>Yuklanmoqda...</span>
+              <span>{t("admin.upload.uploading")}</span>
             </>
           ) : (
             <>
               <ImageIcon size={20} />
-              <span>Rasm tanlash</span>
-              <small>JPG, PNG, WebP yoki GIF — max 10 MB</small>
+              <span>{t("admin.upload.pick")}</span>
+              <small>{t("admin.upload.formats")}</small>
             </>
           )}
         </button>

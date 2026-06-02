@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { ArrowLeft, Save, Trash2 } from "lucide-react";
+import { useTranslation } from "../../i18n/LangContext";
 
 export function FormShell({
   title,
@@ -19,12 +20,13 @@ export function FormShell({
   onDelete?: () => void;
   alert?: { type: "error" | "success"; message: string } | null;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className="admin-page-header">
         <div className="admin-page-title-block">
           <Link href={backHref} className="admin-back-link">
-            <ArrowLeft size={12} /> Orqaga
+            <ArrowLeft size={12} /> {t("admin.common.back")}
           </Link>
           <h1 className="admin-page-title">{title}</h1>
           {subtitle && <p className="admin-page-subtitle">{subtitle}</p>}
@@ -43,7 +45,7 @@ export function FormShell({
         <div style={{ marginTop: 16, textAlign: "right" }}>
           <button type="button" onClick={onDelete} className="admin-btn admin-btn-danger">
             <Trash2 size={14} />
-            O'chirish
+            {t("admin.common.delete")}
           </button>
         </div>
       )}
@@ -51,12 +53,13 @@ export function FormShell({
   );
 }
 
-export function SubmitButton({ children = "Saqlash" }: { children?: React.ReactNode }) {
+export function SubmitButton({ children }: { children?: React.ReactNode }) {
+  const { t } = useTranslation();
   const { pending } = useFormStatus();
   return (
     <button type="submit" className="admin-btn admin-btn-primary" disabled={pending}>
       <Save size={14} />
-      {pending ? "Saqlanmoqda..." : children}
+      {pending ? t("admin.common.saving") : (children ?? t("admin.common.save"))}
     </button>
   );
 }

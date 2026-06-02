@@ -2,20 +2,22 @@
 
 import { useTransition } from "react";
 import { Trash2 } from "lucide-react";
+import { useTranslation } from "../../i18n/LangContext";
 
 export default function DeleteButton({
   action,
-  confirmText = "O'chirish tasdiqlansin?",
+  confirmText,
   size = "normal",
 }: {
   action: () => Promise<void>;
   confirmText?: string;
   size?: "normal" | "icon";
 }) {
+  const { t } = useTranslation();
   const [pending, startTransition] = useTransition();
 
   const handleClick = () => {
-    if (!window.confirm(confirmText)) return;
+    if (!window.confirm(confirmText || t("admin.common.deleteConfirm"))) return;
     startTransition(async () => {
       await action();
     });
@@ -27,10 +29,10 @@ export default function DeleteButton({
       onClick={handleClick}
       disabled={pending}
       className={`admin-btn admin-btn-danger ${size === "icon" ? "admin-btn-icon" : ""}`}
-      aria-label="O'chirish"
+      aria-label={t("admin.common.delete")}
     >
       <Trash2 size={size === "icon" ? 14 : 13} />
-      {size !== "icon" && (pending ? "O'chirilmoqda..." : "O'chirish")}
+      {size !== "icon" && (pending ? t("admin.common.deleting") : t("admin.common.delete"))}
     </button>
   );
 }

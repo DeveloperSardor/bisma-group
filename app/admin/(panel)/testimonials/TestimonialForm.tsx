@@ -6,6 +6,7 @@ import DeleteButton from "../../_shared/DeleteButton";
 import { LocalizedInput } from "../../_shared/LocalizedInput";
 import ImageUpload from "../../_shared/ImageUpload";
 import { FormLangProvider } from "../../_shared/FormLangContext";
+import { useTranslation } from "../../../i18n/LangContext";
 import {
   createTestimonialAction,
   updateTestimonialAction,
@@ -26,6 +27,7 @@ type Testimonial = {
 };
 
 export default function TestimonialForm({ item }: { item?: Testimonial }) {
+  const { t } = useTranslation();
   const isEdit = !!item;
   const action = isEdit
     ? (s: TestimonialFormState, fd: FormData) => updateTestimonialAction(item!.id, s, fd)
@@ -34,8 +36,8 @@ export default function TestimonialForm({ item }: { item?: Testimonial }) {
 
   return (
     <FormShell
-      title={isEdit ? "Sharhni tahrirlash" : "Yangi sharh qo'shish"}
-      subtitle="Saytdagi mijoz sharhlari (slayder)"
+      title={isEdit ? t("admin.testimonialForm.titleEdit") : t("admin.testimonialForm.titleNew")}
+      subtitle={t("admin.testimonialForm.subtitle")}
       backHref="/admin/testimonials"
       alert={state.error ? { type: "error", message: state.error } : null}
     >
@@ -43,38 +45,66 @@ export default function TestimonialForm({ item }: { item?: Testimonial }) {
       <form action={formAction} className="admin-form">
         <div className="admin-form-row">
           <div className="admin-field">
-            <LocalizedInput name="author" defaultValue={item?.author} label="Muallif" required placeholder="Masalan: Odiljon va Shahnoza" />
+            <LocalizedInput
+              name="author"
+              defaultValue={item?.author}
+              label={t("admin.testimonialForm.author")}
+              required
+              placeholder={t("admin.testimonialForm.authorPh")}
+            />
           </div>
           <div className="admin-field">
-            <LocalizedInput name="category" defaultValue={item?.category} label="Kategoriya (tab nomi)" required placeholder="Masalan: Yosh oilalar" />
+            <LocalizedInput
+              name="category"
+              defaultValue={item?.category}
+              label={t("admin.testimonialForm.category")}
+              required
+              placeholder={t("admin.testimonialForm.categoryPh")}
+            />
           </div>
         </div>
         <div className="admin-field">
-          <LocalizedInput name="age" defaultValue={item?.age} label="Yosh / loyiha tafsilotlari" placeholder="Masalan: Kosmetik remont · 58 m²" />
+          <LocalizedInput
+            name="age"
+            defaultValue={item?.age}
+            label={t("admin.testimonialForm.age")}
+            placeholder={t("admin.testimonialForm.agePh")}
+          />
         </div>
         <div className="admin-field">
-          <LocalizedInput name="quote" defaultValue={item?.quote} label="Sharh matni" isTextarea required />
+          <LocalizedInput
+            name="quote"
+            defaultValue={item?.quote}
+            label={t("admin.testimonialForm.quote")}
+            isTextarea
+            required
+          />
         </div>
         <div className="admin-field">
-          <LocalizedInput name="result" defaultValue={item?.result} label="Natija (pastdagi yashil banner)" placeholder="Masalan: 30 kunda topshirildi" />
+          <LocalizedInput
+            name="result"
+            defaultValue={item?.result}
+            label={t("admin.testimonialForm.result")}
+            placeholder={t("admin.testimonialForm.resultPh")}
+          />
         </div>
         <div className="admin-field">
           <ImageUpload
             name="avatar"
             defaultValue={item?.avatar}
-            label="Avatar (mijoz rasmi)"
-            hint="Otzyv slayderida ko'rinadigan kichik avatar"
+            label={t("admin.testimonialForm.avatar")}
+            hint={t("admin.testimonialForm.avatarHint")}
           />
         </div>
         <div className="admin-form-row">
           <div className="admin-field">
-            <label className="admin-field-label">Tartib</label>
+            <label className="admin-field-label">{t("admin.common.order")}</label>
             <input type="number" name="order" className="admin-input" defaultValue={item?.order ?? 0} />
           </div>
           <div className="admin-field" style={{ justifyContent: "flex-end" }}>
             <label className="admin-checkbox">
               <input type="checkbox" name="isActive" defaultChecked={item?.isActive ?? true} />
-              <span className="admin-checkbox-label">Saytda ko'rsatilsin</span>
+              <span className="admin-checkbox-label">{t("admin.common.visible")}</span>
             </label>
           </div>
         </div>

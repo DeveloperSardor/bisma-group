@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { useFormLang } from "./FormLangContext";
+import { useTranslation } from "../../i18n/LangContext";
 
 type FieldDef = {
   name: string;
@@ -33,7 +34,7 @@ export default function ArrayEditor({
   name,
   initialJson,
   fields,
-  addLabel = "Qator qo'shish",
+  addLabel,
   emptyHint,
 }: {
   name: string;
@@ -43,7 +44,10 @@ export default function ArrayEditor({
   emptyHint?: string;
 }) {
   const id = useId();
+  const { t } = useTranslation();
   const hasLocalized = fields.some((f) => f.localized);
+  const addLabelText = addLabel || t("admin.arrayEditor.addRow");
+  const emptyText = emptyHint || t("admin.arrayEditor.emptyDefault");
 
   const parsed: Record<string, string>[] = (() => {
     if (!initialJson) return [];
@@ -149,7 +153,7 @@ export default function ArrayEditor({
 
       {showLocalBar && (
         <div className="ae-lang-bar">
-          <span className="ae-lang-bar-label">Til:</span>
+          <span className="ae-lang-bar-label">{t("admin.arrayEditor.langPrefix")}</span>
           <div className="ae-lang-tabs">
             {(["uz", "ru", "en"] as const).map((l) => (
               <button
@@ -166,16 +170,14 @@ export default function ArrayEditor({
       )}
 
       {rows.length === 0 && (
-        <div className="ae-empty">
-          {emptyHint || "Hozircha qator yo'q. Pastdagi tugma orqali qo'shing."}
-        </div>
+        <div className="ae-empty">{emptyText}</div>
       )}
 
       {rows.map((row, i) => (
         <div key={`${id}-${i}`} className="ae-row">
-          <div className="ae-handle" title="Tartibni o'zgartirish">
-            <button type="button" onClick={() => moveUp(i)} aria-label="Yuqori" className="ae-mini-btn">▲</button>
-            <button type="button" onClick={() => moveDown(i)} aria-label="Past" className="ae-mini-btn">▼</button>
+          <div className="ae-handle" title={t("admin.arrayEditor.langPrefix") /* hover label kept simple */}>
+            <button type="button" onClick={() => moveUp(i)} aria-label={t("admin.arrayEditor.moveUp")} className="ae-mini-btn">▲</button>
+            <button type="button" onClick={() => moveDown(i)} aria-label={t("admin.arrayEditor.moveDown")} className="ae-mini-btn">▼</button>
           </div>
           <div className="ae-fields">
             {fields.map((f) => {
@@ -226,7 +228,7 @@ export default function ArrayEditor({
             type="button"
             className="ae-remove"
             onClick={() => removeRow(i)}
-            aria-label="O'chirish"
+            aria-label={t("admin.arrayEditor.removeRow")}
           >
             <X size={14} />
           </button>
@@ -235,7 +237,7 @@ export default function ArrayEditor({
 
       <button type="button" onClick={addRow} className="ae-add">
         <Plus size={14} />
-        {addLabel}
+        {addLabelText}
       </button>
 
       <style jsx>{`

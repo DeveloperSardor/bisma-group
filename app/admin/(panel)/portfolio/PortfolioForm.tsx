@@ -8,6 +8,7 @@ import { LocalizedInput } from "../../_shared/LocalizedInput";
 import ImageUpload from "../../_shared/ImageUpload";
 import { FormLangProvider } from "../../_shared/FormLangContext";
 import { ICON_OPTIONS } from "../../_shared/iconOptions";
+import { useTranslation } from "../../../i18n/LangContext";
 import {
   createPortfolioAction,
   updatePortfolioAction,
@@ -51,9 +52,6 @@ type Portfolio = {
 
 const RENOVATION_TYPES = ["Kosmetik", "Kapital", "Dizaynerlik", "Maxsus", "Tijorat"];
 
-// Convert string[] JSON to [{value: string}] for ArrayEditor compatibility.
-// Each value may itself be a localized JSON string — keep it intact so the
-// editor can hydrate the per-language values.
 function stringListToJson(json: string | null | undefined): string {
   if (!json) return "[]";
   try {
@@ -66,6 +64,7 @@ function stringListToJson(json: string | null | undefined): string {
 }
 
 export default function PortfolioForm({ item }: { item?: Portfolio }) {
+  const { t } = useTranslation();
   const isEdit = !!item;
   const action = isEdit
     ? (s: PortfolioFormState, fd: FormData) => updatePortfolioAction(item!.id, s, fd)
@@ -76,34 +75,34 @@ export default function PortfolioForm({ item }: { item?: Portfolio }) {
 
   return (
     <FormShell
-      title={isEdit ? "Loyihani tahrirlash" : "Yangi portfolio loyiha"}
-      subtitle="Saytdagi &quot;Tugatilgan loyihalar&quot; bo'limiga qo'shiladi"
+      title={isEdit ? t("admin.portfolioForm.titleEdit") : t("admin.portfolioForm.titleNew")}
+      subtitle={t("admin.portfolioForm.subtitle")}
       backHref="/admin/portfolio"
       alert={state.error ? { type: "error", message: state.error } : null}
     >
       <FormLangProvider>
       <form action={formAction} className="admin-form">
-        <div className="admin-form-section-title">Asosiy ma'lumotlar</div>
+        <div className="admin-form-section-title">{t("admin.portfolioForm.sectionMain")}</div>
 
         <div className="admin-form-row">
           <div className="admin-field">
-            <LocalizedInput name="name" defaultValue={item?.name} label="Loyiha nomi" required placeholder="Yunusobod · Dizaynerlik" />
+            <LocalizedInput name="name" defaultValue={item?.name} label={t("admin.portfolioForm.name")} required placeholder={t("admin.portfolioForm.namePh")} />
           </div>
           <div className="admin-field">
-            <LocalizedInput name="tagline" defaultValue={item?.tagline} label="Tagline" placeholder="Klassik dizaynerlik remont — 102 m²" />
+            <LocalizedInput name="tagline" defaultValue={item?.tagline} label={t("admin.portfolioForm.tagline")} placeholder={t("admin.portfolioForm.taglinePh")} />
           </div>
         </div>
 
         <div className="admin-field">
-          <LocalizedInput name="shortDesc" defaultValue={item?.shortDesc} label="Qisqa izoh" isTextarea required />
+          <LocalizedInput name="shortDesc" defaultValue={item?.shortDesc} label={t("admin.portfolioForm.shortDesc")} isTextarea required />
         </div>
 
         <div className="admin-form-row">
           <div className="admin-field">
-            <LocalizedInput name="address" defaultValue={item?.address} label="Manzil" placeholder="Toshkent, Yunusobod tumani" />
+            <LocalizedInput name="address" defaultValue={item?.address} label={t("admin.portfolioForm.address")} placeholder={t("admin.portfolioForm.addressPh")} />
           </div>
           <div className="admin-field">
-            <LocalizedInput name="landmark" defaultValue={item?.landmark} label="Mo'ljal" placeholder="Maktab va metro yonida" />
+            <LocalizedInput name="landmark" defaultValue={item?.landmark} label={t("admin.portfolioForm.landmark")} placeholder={t("admin.portfolioForm.landmarkPh")} />
           </div>
         </div>
 
@@ -111,14 +110,13 @@ export default function PortfolioForm({ item }: { item?: Portfolio }) {
           <ImageUpload
             name="image"
             defaultValue={item?.image}
-            label="Asosiy rasm"
+            label={t("admin.portfolioForm.image")}
             required
-            hint="Loyihaning asosiy ko'rsatish rasmi (yuqori sifatda)"
+            hint={t("admin.portfolioForm.imageHint")}
           />
-          <span className="admin-field-hint">Asosiy ko'rsatish rasmi (yuqori sifatda)</span>
         </div>
 
-        <div className="admin-form-section-title">Tijorat loyihasi sozlamasi</div>
+        <div className="admin-form-section-title">{t("admin.portfolioForm.sectionCommercial")}</div>
 
         <div className="admin-field">
           <label className="admin-checkbox">
@@ -128,7 +126,7 @@ export default function PortfolioForm({ item }: { item?: Portfolio }) {
               checked={isCommercial}
               onChange={(e) => setIsCommercial(e.target.checked)}
             />
-            <span className="admin-checkbox-label">Bu — tijorat loyihasi (ofis, restoran, do'kon)</span>
+            <span className="admin-checkbox-label">{t("admin.portfolioForm.isCommercial")}</span>
           </label>
         </div>
 
@@ -136,158 +134,158 @@ export default function PortfolioForm({ item }: { item?: Portfolio }) {
           <>
             <div className="admin-form-row">
               <div className="admin-field">
-                <LocalizedInput name="commBlocks" defaultValue={item?.commBlocks ?? ""} label="Bloklar/xonalar" placeholder="Open-space · 3 alohida xona" />
+                <LocalizedInput name="commBlocks" defaultValue={item?.commBlocks ?? ""} label={t("admin.portfolioForm.commBlocks")} placeholder={t("admin.portfolioForm.commBlocksPh")} />
               </div>
               <div className="admin-field">
-                <LocalizedInput name="commUnits" defaultValue={item?.commUnits ?? ""} label="O'lcham" placeholder="180 m² maydon" />
+                <LocalizedInput name="commUnits" defaultValue={item?.commUnits ?? ""} label={t("admin.portfolioForm.commUnits")} placeholder={t("admin.portfolioForm.commUnitsPh")} />
               </div>
             </div>
             <div className="admin-form-row">
               <div className="admin-field">
-                <LocalizedInput name="commStatus" defaultValue={item?.commStatus ?? ""} label="Holat" placeholder="Topshirildi" />
+                <LocalizedInput name="commStatus" defaultValue={item?.commStatus ?? ""} label={t("admin.portfolioForm.commStatus")} placeholder={t("admin.portfolioForm.commStatusPh")} />
               </div>
               <div className="admin-field">
-                <LocalizedInput name="commSize" defaultValue={item?.commSize ?? ""} label="Maydon (qisqa)" placeholder="180 m²" />
+                <LocalizedInput name="commSize" defaultValue={item?.commSize ?? ""} label={t("admin.portfolioForm.commSize")} placeholder="180 m²" />
               </div>
             </div>
             <div className="admin-field">
-              <LocalizedInput name="commBenefits" defaultValue={item?.commBenefits ?? ""} label="Foydalari" isTextarea placeholder="Konditsioner · LAN tarmog'i · LED yoritish" />
+              <LocalizedInput name="commBenefits" defaultValue={item?.commBenefits ?? ""} label={t("admin.portfolioForm.commBenefits")} isTextarea placeholder={t("admin.portfolioForm.commBenefitsPh")} />
             </div>
           </>
         ) : null}
 
-        <div className="admin-form-section-title">Texnik xarakteristikalar</div>
+        <div className="admin-form-section-title">{t("admin.portfolioForm.sectionTech")}</div>
 
         <div className="admin-form-row">
           <div className="admin-field">
-            <label className="admin-field-label">Remont turi</label>
+            <label className="admin-field-label">{t("admin.portfolioForm.renovationType")}</label>
             <select name="renovationType" className="admin-select" defaultValue={item?.renovationType ?? "Kosmetik"}>
-              {RENOVATION_TYPES.map((t) => (
-                <option key={t} value={t}>{t}</option>
+              {RENOVATION_TYPES.map((rt) => (
+                <option key={rt} value={rt}>{rt}</option>
               ))}
             </select>
           </div>
           <div className="admin-field">
-            <LocalizedInput name="duration" defaultValue={item?.duration} label="Muddat" placeholder="90 kun" />
+            <LocalizedInput name="duration" defaultValue={item?.duration} label={t("admin.portfolioForm.duration")} placeholder={t("admin.portfolioForm.durationPh")} />
           </div>
           <div className="admin-field">
-            <LocalizedInput name="area" defaultValue={item?.area} label="Maydon" placeholder="102 m²" />
+            <LocalizedInput name="area" defaultValue={item?.area} label={t("admin.portfolioForm.area")} placeholder={t("admin.portfolioForm.areaPh")} />
           </div>
         </div>
 
         <div className="admin-form-row">
           <div className="admin-field">
-            <LocalizedInput name="pricePerSqm" defaultValue={item?.pricePerSqm} label="Narx / m²" placeholder="$135 / m²" />
+            <LocalizedInput name="pricePerSqm" defaultValue={item?.pricePerSqm} label={t("admin.portfolioForm.pricePerSqm")} placeholder={t("admin.portfolioForm.pricePerSqmPh")} />
           </div>
           <div className="admin-field">
-            <LocalizedInput name="rooms" defaultValue={item?.rooms} label="Xonalar" placeholder="3 xonali" />
+            <LocalizedInput name="rooms" defaultValue={item?.rooms} label={t("admin.portfolioForm.rooms")} placeholder={t("admin.portfolioForm.roomsPh")} />
           </div>
           <div className="admin-field">
-            <LocalizedInput name="tech" defaultValue={item?.tech} label="Texnologiya" placeholder="Toza topshiruv" />
+            <LocalizedInput name="tech" defaultValue={item?.tech} label={t("admin.portfolioForm.tech")} placeholder={t("admin.portfolioForm.techPh")} />
           </div>
         </div>
 
         <div className="admin-form-row">
           <div className="admin-field">
-            <LocalizedInput name="docs" defaultValue={item?.docs} label="Hujjatlar" placeholder="Shartnoma · 2 yil kafolat" />
+            <LocalizedInput name="docs" defaultValue={item?.docs} label={t("admin.portfolioForm.docs")} placeholder={t("admin.portfolioForm.docsPh")} />
           </div>
           <div className="admin-field">
-            <LocalizedInput name="price" defaultValue={item?.price} label="Umumiy narx" placeholder="$135 / m²" />
+            <LocalizedInput name="price" defaultValue={item?.price} label={t("admin.portfolioForm.price")} placeholder={t("admin.portfolioForm.pricePerSqmPh")} />
           </div>
           <div className="admin-field">
-            <LocalizedInput name="badge" defaultValue={item?.badge ?? ""} label="Badge (ixtiyoriy)" placeholder="YANGI / KOTLOVAN" />
+            <LocalizedInput name="badge" defaultValue={item?.badge ?? ""} label={t("admin.portfolioForm.badge")} placeholder={t("admin.portfolioForm.badgePh")} />
           </div>
         </div>
 
-        <div className="admin-form-section-title">Xonalar tarkibi</div>
+        <div className="admin-form-section-title">{t("admin.portfolioForm.sectionApartments")}</div>
 
         <div className="admin-field">
           <ArrayEditor
             name="apartments"
             initialJson={item?.apartments}
             fields={[
-              { name: "rooms", label: "Xona", placeholder: "Yashash xonasi", localized: true },
-              { name: "size", label: "Maydon", placeholder: "32 m²", localized: true },
-              { name: "plan", label: "Reja / uslub", placeholder: "Klassik", grow: 2, localized: true },
+              { name: "rooms", label: t("admin.portfolioForm.apartmentsRoom"), placeholder: t("admin.portfolioForm.apartmentsRoomPh"), localized: true },
+              { name: "size", label: t("admin.portfolioForm.apartmentsSize"), placeholder: t("admin.portfolioForm.apartmentsSizePh"), localized: true },
+              { name: "plan", label: t("admin.portfolioForm.apartmentsPlan"), placeholder: t("admin.portfolioForm.apartmentsPlanPh"), grow: 2, localized: true },
             ]}
-            addLabel="Xona qo'shish"
+            addLabel={t("admin.portfolioForm.apartmentsAdd")}
           />
         </div>
 
-        <div className="admin-form-section-title">Imkoniyatlar (amenities)</div>
+        <div className="admin-form-section-title">{t("admin.portfolioForm.sectionAmenities")}</div>
 
         <div className="admin-field">
           <ArrayEditor
             name="amenities"
             initialJson={item?.amenities}
             fields={[
-              { name: "icon", label: "Ikonka", type: "select", options: ICON_OPTIONS },
-              { name: "label", label: "Tavsif", placeholder: "3D dizayn-loyiha", grow: 3, localized: true },
+              { name: "icon", label: t("admin.portfolioForm.iconLabel"), type: "select", options: ICON_OPTIONS },
+              { name: "label", label: t("admin.portfolioForm.labelGeneric"), placeholder: t("admin.portfolioForm.amenitiesPh"), grow: 3, localized: true },
             ]}
-            addLabel="Imkoniyat qo'shish"
+            addLabel={t("admin.portfolioForm.amenitiesAdd")}
           />
         </div>
 
-        <div className="admin-form-section-title">Xavfsizlik / sifat</div>
+        <div className="admin-form-section-title">{t("admin.portfolioForm.sectionSafety")}</div>
 
         <div className="admin-field">
           <ArrayEditor
             name="safety"
             initialJson={item?.safety}
             fields={[
-              { name: "icon", label: "Ikonka", type: "select", options: ICON_OPTIONS },
-              { name: "label", label: "Tavsif", placeholder: "Foto · video hisobot", grow: 3, localized: true },
+              { name: "icon", label: t("admin.portfolioForm.iconLabel"), type: "select", options: ICON_OPTIONS },
+              { name: "label", label: t("admin.portfolioForm.labelGeneric"), placeholder: t("admin.portfolioForm.safetyPh"), grow: 3, localized: true },
             ]}
-            addLabel="Xavfsizlik qo'shish"
+            addLabel={t("admin.portfolioForm.safetyAdd")}
           />
         </div>
 
-        <div className="admin-form-section-title">Kim uchun mos (matrix)</div>
+        <div className="admin-form-section-title">{t("admin.portfolioForm.sectionMatrix")}</div>
 
         <div className="admin-field">
           <ArrayEditor
             name="matrix"
             initialJson={item?.matrix}
             fields={[
-              { name: "icon", label: "Ikonka", type: "select", options: ICON_OPTIONS },
-              { name: "type", label: "Kim uchun", placeholder: "Yosh oilalar", localized: true },
-              { name: "solution", label: "Yechim", placeholder: "Bolalar xonasi alohida loyihalandi", grow: 2, localized: true },
+              { name: "icon", label: t("admin.portfolioForm.iconLabel"), type: "select", options: ICON_OPTIONS },
+              { name: "type", label: t("admin.portfolioForm.matrixType"), placeholder: t("admin.portfolioForm.matrixTypePh"), localized: true },
+              { name: "solution", label: t("admin.portfolioForm.matrixSolution"), placeholder: t("admin.portfolioForm.matrixSolutionPh"), grow: 2, localized: true },
             ]}
-            addLabel="Variant qo'shish"
+            addLabel={t("admin.portfolioForm.matrixAdd")}
           />
         </div>
 
-        <div className="admin-form-section-title">Afzalliklar va to'lov</div>
+        <div className="admin-form-section-title">{t("admin.portfolioForm.sectionAdvPay")}</div>
 
         <div className="admin-field">
-          <label className="admin-field-label">Afzalliklar ro'yxati</label>
+          <label className="admin-field-label">{t("admin.portfolioForm.advantages")}</label>
           <ArrayEditor
             name="advantages"
             initialJson={stringListToJson(item?.advantages)}
-            fields={[{ name: "value", label: "Afzallik", placeholder: "3D loyiha asosida bajarildi", grow: 1, localized: true }]}
-            addLabel="Afzallik qo'shish"
+            fields={[{ name: "value", label: t("admin.portfolioForm.labelGeneric"), placeholder: t("admin.portfolioForm.advantagesPh"), grow: 1, localized: true }]}
+            addLabel={t("admin.portfolioForm.advantagesAdd")}
           />
         </div>
 
         <div className="admin-field">
-          <label className="admin-field-label">To'lov variantlari</label>
+          <label className="admin-field-label">{t("admin.portfolioForm.paymentOptions")}</label>
           <ArrayEditor
             name="paymentOptions"
             initialJson={stringListToJson(item?.paymentOptions)}
-            fields={[{ name: "value", label: "Variant", placeholder: "Naqd", grow: 1, localized: true }]}
-            addLabel="To'lov turini qo'shish"
+            fields={[{ name: "value", label: t("admin.portfolioForm.labelGeneric"), placeholder: t("admin.portfolioForm.paymentOptionsPh"), grow: 1, localized: true }]}
+            addLabel={t("admin.portfolioForm.paymentOptionsAdd")}
           />
         </div>
 
         <div className="admin-form-row">
           <div className="admin-field">
-            <label className="admin-field-label">Tartib</label>
+            <label className="admin-field-label">{t("admin.common.order")}</label>
             <input type="number" name="order" className="admin-input" defaultValue={item?.order ?? 0} />
           </div>
           <div className="admin-field" style={{ justifyContent: "flex-end" }}>
             <label className="admin-checkbox">
               <input type="checkbox" name="isActive" defaultChecked={item?.isActive ?? true} />
-              <span className="admin-checkbox-label">Saytda ko'rsatilsin</span>
+              <span className="admin-checkbox-label">{t("admin.common.visible")}</span>
             </label>
           </div>
         </div>

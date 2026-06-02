@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
+import { useTranslation } from "../../i18n/LangContext";
 
 export type FormLang = "uz" | "ru" | "en";
 
@@ -34,6 +35,7 @@ export function FormLangProvider({
 
 function FormLangBar() {
   const ctx = useContext(FormLangContext);
+  const { t } = useTranslation();
   if (!ctx) return null;
   const { lang, setLang } = ctx;
 
@@ -42,7 +44,7 @@ function FormLangBar() {
       <div className="fl-bar-inner">
         <div className="fl-bar-label">
           <span className="fl-bar-dot" />
-          <span>KIRITISH TILI</span>
+          <span>{t("admin.langBar.title")}</span>
         </div>
         <div className="fl-tabs">
           {(["uz", "ru", "en"] as const).map((l) => (
@@ -56,7 +58,7 @@ function FormLangBar() {
             </button>
           ))}
         </div>
-        <span className="fl-bar-hint">Barcha matn maydonlari shu tilga moslashadi</span>
+        <span className="fl-bar-hint">{t("admin.langBar.hint")}</span>
       </div>
 
       <style jsx>{`
