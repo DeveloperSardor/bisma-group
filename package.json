@@ -7,6 +7,7 @@
     "dev:admin": "ADMIN_ONLY=true NEXT_DIST_DIR=.next-admin next dev -p 3001",
     "build": "prisma generate && next build",
     "start": "next start -p 3000",
+    "start:admin": "ADMIN_ONLY=true next start -p 3101",
     "lint": "eslint",
     "postinstall": "prisma generate"
   },

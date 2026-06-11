@@ -18,12 +18,30 @@ async function isValidSession(token: string | undefined): Promise<boolean> {
   }
 }
 
+function adminSubdomainUrl(pathname: string, search: string): string {
+  const host = process.env.ADMIN_HOST || "admin.bismagroup.uz";
+  const proto = process.env.NODE_ENV === "production" ? "https" : "http";
+  return `${proto}://${host}${pathname}${search}`;
+}
+
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const adminOnly = process.env.ADMIN_ONLY === "true";
+  const host = req.headers.get("host")?.split(":")[0] ?? "";
+  const adminHost = (process.env.ADMIN_HOST || "admin.bismagroup.uz").split(":")[0];
 
-  // On the admin-only server, redirect root and any non-admin route to /admin
-  if (adminOnly && !pathname.startsWith("/admin") && !pathname.startsWith("/api")) {
+  // Main site: send /admin traffic to the admin subdomain
+  if (!adminOnly && pathname.startsWith("/admin")) {
+    return NextResponse.redirect(adminSubdomainUrl(pathname, req.nextUrl.search));
+  }
+
+  // Admin subdomain process: only serve admin + API routes
+  if (adminOnly && host === adminHost && !pathname.startsWith("/admin") && !pathname.startsWith("/api")) {
+    return NextResponse.redirect(new URL("/admin", req.url));
+  }
+
+  // Standalone admin process (port 3101): redirect root to /admin
+  if (adminOnly && host !== adminHost && !pathname.startsWith("/admin") && !pathname.startsWith("/api")) {
     return NextResponse.redirect(new URL("/admin", req.url));
   }
 
