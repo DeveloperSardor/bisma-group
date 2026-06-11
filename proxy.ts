@@ -18,57 +18,76 @@ async function isValidSession(token: string | undefined): Promise<boolean> {
   }
 }
 
+function getAdminHost(): string {
+  return (process.env.ADMIN_HOST || "admin.bismagroup.uz").split(":")[0];
+}
+
+function isAdminSite(req: NextRequest, adminOnly: boolean): boolean {
+  const host = req.headers.get("host")?.split(":")[0] ?? "";
+  return adminOnly || host === getAdminHost();
+}
+
+function toPublicPath(pathname: string): string {
+  if (pathname === "/admin") return "/";
+  if (pathname.startsWith("/admin/")) return pathname.slice("/admin".length) || "/";
+  return pathname;
+}
+
+function toInternalPath(pathname: string): string {
+  if (pathname === "/") return "/admin";
+  return `/admin${pathname}`;
+}
+
 function adminSubdomainUrl(pathname: string, search: string): string {
-  const host = process.env.ADMIN_HOST || "admin.bismagroup.uz";
+  const host = getAdminHost();
   const proto = process.env.NODE_ENV === "production" ? "https" : "http";
   return `${proto}://${host}${pathname}${search}`;
 }
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const search = req.nextUrl.search;
   const adminOnly = process.env.ADMIN_ONLY === "true";
-  const host = req.headers.get("host")?.split(":")[0] ?? "";
-  const adminHost = (process.env.ADMIN_HOST || "admin.bismagroup.uz").split(":")[0];
+  const onAdminSite = isAdminSite(req, adminOnly);
 
-  // Main site: send /admin traffic to the admin subdomain
-  if (!adminOnly && pathname.startsWith("/admin")) {
-    return NextResponse.redirect(adminSubdomainUrl(pathname, req.nextUrl.search));
+  // Main site: legacy /admin/* → admin subdomain (clean URLs)
+  if (!onAdminSite && pathname.startsWith("/admin")) {
+    return NextResponse.redirect(adminSubdomainUrl(toPublicPath(pathname), search));
   }
 
-  // Admin subdomain process: only serve admin + API routes
-  if (adminOnly && host === adminHost && !pathname.startsWith("/admin") && !pathname.startsWith("/api")) {
-    return NextResponse.redirect(new URL("/admin", req.url));
-  }
-
-  // Standalone admin process (port 3101): redirect root to /admin
-  if (adminOnly && host !== adminHost && !pathname.startsWith("/admin") && !pathname.startsWith("/api")) {
-    return NextResponse.redirect(new URL("/admin", req.url));
-  }
-
-  // Allow /admin/login itself
-  if (pathname === "/admin/login") {
-    const token = req.cookies.get(SESSION_COOKIE)?.value;
-    if (await isValidSession(token)) {
-      return NextResponse.redirect(new URL("/admin", req.url));
-    }
+  if (!onAdminSite) {
     return NextResponse.next();
   }
 
-  // Protect all other /admin routes
+  // Admin subdomain: hide /admin prefix in the address bar
   if (pathname.startsWith("/admin")) {
-    const token = req.cookies.get(SESSION_COOKIE)?.value;
-    if (!(await isValidSession(token))) {
-      const url = new URL("/admin/login", req.url);
-      return NextResponse.redirect(url);
-    }
+    return NextResponse.redirect(new URL(toPublicPath(pathname) + search, req.url));
   }
 
-  return NextResponse.next();
+  if (pathname.startsWith("/api") || pathname.startsWith("/_next")) {
+    return NextResponse.next();
+  }
+
+  const internalPath = toInternalPath(pathname);
+
+  if (internalPath === "/admin/login") {
+    const token = req.cookies.get(SESSION_COOKIE)?.value;
+    if (await isValidSession(token)) {
+      return NextResponse.redirect(new URL("/" + search, req.url));
+    }
+    return NextResponse.rewrite(new URL(internalPath + search, req.url));
+  }
+
+  const token = req.cookies.get(SESSION_COOKIE)?.value;
+  if (!(await isValidSession(token))) {
+    return NextResponse.redirect(new URL("/login" + search, req.url));
+  }
+
+  return NextResponse.rewrite(new URL(internalPath + search, req.url));
 }
 
 export const config = {
   matcher: [
-    // Match everything except Next.js internals and static files
     "/((?!_next/static|_next/image|favicon.ico|logo.png|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|css|js|woff|woff2|ttf|otf)).*)",
   ],
 };

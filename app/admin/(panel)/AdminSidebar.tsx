@@ -7,6 +7,7 @@ import { LogOut, LayoutDashboard, Briefcase, Sparkles, HelpCircle, Quote, Packag
 import { logoutAction } from "./actions";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
 import { useTranslation } from "../../i18n/LangContext";
+import { adminPathnameToRoute } from "../../../lib/adminPaths";
 
 type NavItem = {
   href: string;
@@ -63,9 +64,11 @@ export default function AdminSidebar({
     },
   ];
 
+  const routePath = adminPathnameToRoute(pathname ?? "/");
+
   const isActive = (href: string) => {
-    if (href === "/admin") return pathname === "/admin";
-    return pathname === href || pathname.startsWith(href + "/");
+    if (href === "/admin") return routePath === "/admin";
+    return routePath === href || routePath.startsWith(href + "/");
   };
 
   return (

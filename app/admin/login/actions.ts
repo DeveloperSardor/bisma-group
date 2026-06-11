@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authenticate, signSession, setSessionCookie } from "../../../lib/auth";
+import { adminUrl } from "../../../lib/adminPaths";
 
 export async function loginAction(_prev: { error?: string }, formData: FormData): Promise<{ error?: string }> {
   const username = String(formData.get("username") || "").trim();
@@ -15,5 +16,5 @@ export async function loginAction(_prev: { error?: string }, formData: FormData)
   }
   const token = await signSession(session);
   await setSessionCookie(token);
-  redirect("/admin");
+  redirect(adminUrl());
 }

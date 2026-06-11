@@ -23,7 +23,7 @@ fi
 if pm2 describe bisma-admin >/dev/null 2>&1; then
   pm2 restart bisma-admin
 else
-  cd "$APP_DIR" && pm2 start "env ADMIN_ONLY=true npx next start -p 3101" --name bisma-admin --cwd "$APP_DIR"
+  cd "$APP_DIR" && pm2 start "env ADMIN_ONLY=true NEXT_PUBLIC_ADMIN_ONLY=true npx next start -p 3101" --name bisma-admin --cwd "$APP_DIR"
 fi
 pm2 save
 
@@ -59,4 +59,4 @@ if command -v certbot >/dev/null 2>&1; then
   certbot --nginx -d admin.bismagroup.uz --non-interactive --agree-tos -m tradevisionai@gmail.com --redirect || true
 fi
 
-echo "==> Done. Admin panel: https://admin.bismagroup.uz/admin/login"
+echo "==> Done. Admin panel: https://admin.bismagroup.uz/login"

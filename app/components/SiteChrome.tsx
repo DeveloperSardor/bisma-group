@@ -7,7 +7,9 @@ import ChatWidget from "./ChatWidget";
 
 export default function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith("/admin") ?? false;
+  const isAdmin =
+    pathname?.startsWith("/admin") ||
+    process.env.NEXT_PUBLIC_ADMIN_ONLY === "true";
 
   if (isAdmin) {
     return <>{children}</>;
