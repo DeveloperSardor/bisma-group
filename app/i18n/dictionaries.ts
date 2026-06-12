@@ -23,7 +23,7 @@ export const dictionaries = {
         warranty: '2 yil yozma kafolat',
         control: 'Prorab har kuni sifat nazoratida',
       },
-      ctaPrimary: 'Bepul smeta olish',
+      ctaPrimary: "Ta'mirni hisoblatirish",
       ctaPhone: '+998 78 122 75 75',
     },
     services: {
@@ -447,7 +447,7 @@ export const dictionaries = {
         warranty: '2 года письменной гарантии',
         control: 'Прораб каждый день на контроле качества',
       },
-      ctaPrimary: 'Получить бесплатную смету',
+      ctaPrimary: 'Рассчитать ремонт',
       ctaPhone: '+998 78 122 75 75',
     },
     services: {
@@ -871,7 +871,7 @@ export const dictionaries = {
         warranty: '2-year written warranty',
         control: 'Foreman on quality control every day',
       },
-      ctaPrimary: 'Get free estimate',
+      ctaPrimary: 'Calculate renovation',
       ctaPhone: '+998 78 122 75 75',
     },
     services: {
