@@ -113,7 +113,7 @@ export default function Footer({
             </div>
           </div>
 
-          <div className="form-wrap">
+          <div id="form" className="form-wrap">
             {isSuccess ? (
               <div className="success">
                 <div className="success-icon"><Check size={28} strokeWidth={2.5} /></div>

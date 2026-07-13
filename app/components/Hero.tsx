@@ -65,7 +65,7 @@ export default function Hero({
         <p className="hero-desc">{descL}</p>
 
         <div className="hero-actions">
-          <a href="#contact" className="hero-btn">
+          <a href="#form" className="hero-btn">
             {t("hero.ctaPrimary")}
             <ArrowRight size={15} strokeWidth={1.6} />
           </a>
