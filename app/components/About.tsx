@@ -38,7 +38,7 @@ export default function About({
     { value: projects, label: t("about.stats.projects") },
     { value: `${experience}+`, label: t("about.stats.experience") },
     { value: founded, label: t("about.stats.founded") },
-    { value: warranty, label: t("about.stats.warranty") },
+    { value: getLocalized(warranty, lang) || warranty, label: t("about.stats.warranty") },
   ];
 
   return (
